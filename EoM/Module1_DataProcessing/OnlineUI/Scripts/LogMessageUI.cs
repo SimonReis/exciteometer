@@ -119,7 +119,7 @@ namespace ExciteOMeter
         {
             if(sessionTimeParent.activeSelf)
             {
-                sessionTimeText.text = ExciteOMeterManager.GetTimestampString(1);
+                sessionTimeText.text = ExciteOMeterManager.GetTimestampString(0);
             }
         }
 
