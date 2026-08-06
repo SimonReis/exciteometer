@@ -16,6 +16,8 @@ namespace ExciteOMeter
     /// </summary>
     public static class EoM_Events
     {
+        private static readonly Dictionary<ExciteOMeter.DataType, bool> streamConnectionStates = new Dictionary<ExciteOMeter.DataType, bool>();
+
         // ===================================
         //      EVENTS
         // Triggered when a LSL stream connects or disconnects
@@ -25,14 +27,21 @@ namespace ExciteOMeter
         
         public static void Send_OnStreamConnected(ExciteOMeter.DataType dataType)
         {
+            streamConnectionStates[dataType] = true;
             if(OnStreamConnected != null)
                 OnStreamConnected(dataType);
         }
 
         public static void Send_OnStreamDisconnected(ExciteOMeter.DataType dataType)
         {
+            streamConnectionStates[dataType] = false;
             if(OnStreamDisconnected != null)
                 OnStreamDisconnected(dataType);
+        }
+        
+        public static bool IsStreamConnected(ExciteOMeter.DataType dataType)
+        {
+            return streamConnectionStates.TryGetValue(dataType, out bool isConnected) && isConnected;
         }
 
         // ===================================
