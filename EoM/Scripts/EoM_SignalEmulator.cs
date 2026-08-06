@@ -38,6 +38,7 @@ namespace ExciteOMeter
             if (instance == null)
             {
                 instance = this;
+                DontDestroyOnLoad(gameObject); // Avoid destroing gameobject between scenes
             }
             else
             {
