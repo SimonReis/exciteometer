@@ -33,7 +33,7 @@ namespace ExciteOMeter
             if(labelText != null) labelText.text = dataType.ToString();
 
             // Setup connection indication
-            currentlyConnected = false;
+            currentlyConnected = EoM_Events.IsStreamConnected(dataType);
             SetConnectedStatus(currentlyConnected);
 
             // Recording status

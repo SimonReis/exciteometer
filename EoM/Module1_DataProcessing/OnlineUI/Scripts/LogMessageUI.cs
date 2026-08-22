@@ -58,7 +58,10 @@ namespace ExciteOMeter
         {
             if(instance.consoleOutputText != null)
             {
-                instance.consoleContainer.SetActive(false);
+                if(instance.consoleContainer != null)
+                {
+                    instance.consoleContainer.SetActive(false);
+                }
             }
 
             SetRecordingStatus(false);
@@ -104,11 +107,14 @@ namespace ExciteOMeter
 
         IEnumerator ShowConsoleContainer(float timeout)
         {
-            consoleContainer.SetActive(true);
+            if(consoleContainer != null)
+            {
+                consoleContainer.SetActive(true);
+            }
             isHideConsoleCoroutineRunning = true;
             yield return new WaitForSeconds(timeout);
 
-            if(instance.consoleOutputText != null)
+            if(instance.consoleOutputText != null && instance.consoleContainer != null)
             {
                 instance.consoleContainer.SetActive(false);
                 isHideConsoleCoroutineRunning = false;
@@ -117,9 +123,9 @@ namespace ExciteOMeter
 
         private void ShowElapsedSessionTime()
         {
-            if(sessionTimeParent.activeSelf)
+            if(sessionTimeParent != null && sessionTimeText != null && sessionTimeParent.activeSelf)
             {
-                sessionTimeText.text = ExciteOMeterManager.GetTimestampString(1);
+                sessionTimeText.text = ExciteOMeterManager.GetTimestampString(0);
             }
         }
 
@@ -155,18 +161,33 @@ namespace ExciteOMeter
             //startStopLogging.interactable = true;
 
             // Show buttons with colors
-            recordingStatusImage.color = status? connectedColor : disconnectedColor;
-            recordingStatusButtonText.text = status? isRecordingText : isNotRecordingText;
+            if(recordingStatusImage != null)
+            {
+                recordingStatusImage.color = status? connectedColor : disconnectedColor;
+            }
+            if(recordingStatusButtonText != null)
+            {
+                recordingStatusButtonText.text = status? isRecordingText : isNotRecordingText;
+            }
 
             // Show/Hide timer message
-            sessionTimeParent.SetActive(status? true : false);
+            if(sessionTimeParent != null)
+            {
+                sessionTimeParent.SetActive(status? true : false);
+            }
 
             // Show and hide panels
-            showWhenNotRecording.interactable = status? false : true;
-            showWhenNotRecording.alpha = status? 0.2f : 1.0f;
+            if(showWhenNotRecording != null)
+            {
+                showWhenNotRecording.interactable = status? false : true;
+                showWhenNotRecording.alpha = status? 0.2f : 1.0f;
+            }
 
-            showWhenRecording.interactable = status? true : false;
-            showWhenRecording.alpha = status? 1.0f : 0.2f;
+            if(showWhenRecording != null)
+            {
+                showWhenRecording.interactable = status? true : false;
+                showWhenRecording.alpha = status? 1.0f : 0.2f;
+            }
         }
 
     }
