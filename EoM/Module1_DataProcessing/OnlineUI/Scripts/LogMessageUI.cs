@@ -151,6 +151,12 @@ namespace ExciteOMeter
             ExciteOMeterManager.instance.StartOrStopSessionLog();
         }
 
+        public void StopRecording()
+        {
+            // Call general 
+            ExciteOMeterManager.instance.StopSessionLog();
+        }
+
 
         public void SetRecordingStatus(bool status)
         {
