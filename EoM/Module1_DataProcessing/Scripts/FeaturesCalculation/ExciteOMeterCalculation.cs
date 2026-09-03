@@ -13,6 +13,20 @@ namespace ExciteOMeter
     {
         public static bool Calculate(SessionVariables sessionData)
         {
+            if (sessionData == null ||
+                sessionData.RRi == null ||
+                sessionData.RMSSD == null ||
+                sessionData.RRi.timestamp == null ||
+                sessionData.RMSSD.timestamp == null ||
+                sessionData.RRi.value == null ||
+                sessionData.RMSSD.value == null ||
+                sessionData.RRi.timestamp.Count == 0 ||
+                sessionData.RMSSD.timestamp.Count == 0)
+            {
+                Debug.LogError("ExciteOMeter: Keine gültigen RRi-/RMSSD-Daten vorhanden.");
+                return false;
+            }
+
             // Check that both arrays are the same length
             int N = sessionData.RMSSD.timestamp.Count;
 

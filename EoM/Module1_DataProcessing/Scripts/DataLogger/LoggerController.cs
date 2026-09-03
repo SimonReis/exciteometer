@@ -62,7 +62,7 @@ namespace ExciteOMeter
             // SETUP THE MAIN FOLDER OF THE LOGS DEPENDING ON THE PLATFORM (https://docs.unity3d.com/ScriptReference/Application-dataPath.html)
         #if UNITY_EDITOR
             folderToSaveLogs = Application.dataPath + "/../" + logFolderName + "/";      // In the Editor, the logs are at the same level than Assets folder
-        #elif UNITY_IOS
+        #elif UNITY_ANDROID || UNITY_IOS
             folderToSaveLogs = Application.persistentDataPath + "/" + logFolderName + "/";
         #elif UNITY_WSA
             folderToSaveLogs = Application.persistentDataPath + "/" + logFolderName + "/";
@@ -70,7 +70,7 @@ namespace ExciteOMeter
             // In Release mode, put the logs at the same level than the executable
             folderToSaveLogs = Application.dataPath + "/../" + logFolderName + "/";
         #else
-            folderToSaveLogs = Application.dataPath + logFolderName + "/";
+            folderToSaveLogs = Application.persistentDataPath + "/" + logFolderName + "/";
         #endif
 
             // Write and read general settings 
