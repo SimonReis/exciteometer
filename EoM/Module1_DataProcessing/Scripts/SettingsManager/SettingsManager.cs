@@ -69,14 +69,18 @@ namespace ExciteOMeter
             }
 
             // New Settings object
+            #if UNITY_ANDROID || UNITY_IOS || UNITY_WSA
+            settingsPath = Application.persistentDataPath + "/" + filename;
+            #else
             settingsPath = Application.streamingAssetsPath + "/" + filename;
+            #endif
             settings = new SettingsVariables();
 
             // Create directory
-            if (!Directory.Exists(Application.streamingAssetsPath))
+            string settingsDirectory = Path.GetDirectoryName(settingsPath);
+            if (!Directory.Exists(settingsDirectory))
             {
-                Debug.LogError("StreamingAssets folder did not exist, it was created in the first run. Please stop and play your game again");
-                Directory.CreateDirectory(Application.streamingAssetsPath);
+                Directory.CreateDirectory(settingsDirectory);
             }
 
         }
