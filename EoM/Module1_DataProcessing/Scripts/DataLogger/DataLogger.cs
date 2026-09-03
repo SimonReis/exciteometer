@@ -65,7 +65,8 @@ namespace ExciteOMeter
 
         ~DataLogger()
         {
-            file.Close();
+            if(file != null)
+                file.Close();
         }
 
         public void ToggleLoggingState()
