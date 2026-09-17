@@ -34,6 +34,7 @@ namespace ExciteOMeter
         bool isHideConsoleCoroutineRunning = false;
 
         bool isLogging = false;
+        bool useGameTimerStatus;
 
         public static LogMessageUI instance;
 
@@ -64,7 +65,8 @@ namespace ExciteOMeter
                 }
             }
 
-            SetRecordingStatus(false);
+            useGameTimerStatus = FindObjectOfType<Timer>() != null;
+            SetRecordingStatus(useGameTimerStatus ? Timer.IsRunning : false);
 
             WriteConsoleText("Log files stored in:" + SettingsManager.Values.logSettings.mainLogFolder);
         }
@@ -72,12 +74,22 @@ namespace ExciteOMeter
         void OnEnable()
         {
             EoM_Events.OnLoggingStateChanged += SetRecordingStatus;
+            Timer.OnGameTimerStateChanged += SetGameTimerStatus;
         }
 
 
         void OnDisable()
         {
             EoM_Events.OnLoggingStateChanged -= SetRecordingStatus;
+            Timer.OnGameTimerStateChanged -= SetGameTimerStatus;
+        }
+
+        private void SetGameTimerStatus(bool status)
+        {
+            if (useGameTimerStatus)
+            {
+                ApplyRecordingStatus(status);
+            }
         }
 
         void Update()
@@ -159,6 +171,16 @@ namespace ExciteOMeter
 
 
         public void SetRecordingStatus(bool status)
+        {
+            if (useGameTimerStatus)
+            {
+                return;
+            }
+
+            ApplyRecordingStatus(status);
+        }
+
+        private void ApplyRecordingStatus(bool status)
         {
             // Update local variable
             isLogging = status;

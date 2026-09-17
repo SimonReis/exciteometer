@@ -13,6 +13,7 @@ namespace ExciteOMeter
         [Header("UI setup")]
         public TextMeshProUGUI labelText;
         public Image connectionStatusImage;
+        public Image recordingStatusImage;
         public TextMeshProUGUI valueText;
 
         public Color connectedColor = new Color(0,1,0);
@@ -24,12 +25,18 @@ namespace ExciteOMeter
         public Color notRecordingColor = new Color(0.95f,0.95f,0.95f);
         
         private bool currentlyConnected = false;
+        private bool useGameTimerStatus;
 
         private void Start()
         {
             // Setup UI children
             if(labelText == null) labelText = transform.GetComponentInChildren<TextMeshProUGUI>();
             if(connectionStatusImage ==null) connectionStatusImage = transform.GetComponentInChildren<Image>();
+            if(recordingStatusImage == null)
+            {
+                Transform recording = transform.Find("Recording");
+                if(recording != null) recordingStatusImage = recording.GetComponentInChildren<Image>();
+            }
             if(labelText != null) labelText.text = dataType.ToString();
 
             // Setup connection indication
@@ -37,7 +44,8 @@ namespace ExciteOMeter
             SetConnectedStatus(currentlyConnected);
 
             // Recording status
-            SetRecordingStatus(false);
+            useGameTimerStatus = FindObjectOfType<Timer>() != null;
+            SetRecordingStatus(useGameTimerStatus ? Timer.IsRunning : false);
         }
 
         void OnEnable()
@@ -46,6 +54,7 @@ namespace ExciteOMeter
             EoM_Events.OnStreamDisconnected += StreamDisconnection;
             EoM_Events.OnDataReceived += DataReceived;
             EoM_Events.OnLoggingStateChanged += SetRecordingStatus;
+            Timer.OnGameTimerStateChanged += SetGameTimerStatus;
         }
 
         void OnDisable()
@@ -54,6 +63,15 @@ namespace ExciteOMeter
             EoM_Events.OnStreamDisconnected -= StreamDisconnection;
             EoM_Events.OnDataReceived -= DataReceived;
             EoM_Events.OnLoggingStateChanged -= SetRecordingStatus;
+            Timer.OnGameTimerStateChanged -= SetGameTimerStatus;
+        }
+
+        private void SetGameTimerStatus(bool status)
+        {
+            if (useGameTimerStatus)
+            {
+                SetRecordingIndicator(status);
+            }
         }
         
         void OnValidate()
@@ -102,6 +120,21 @@ namespace ExciteOMeter
 
         public void SetRecordingStatus(bool status)
         {
+            if (useGameTimerStatus)
+            {
+                return;
+            }
+
+            SetRecordingIndicator(status);
+        }
+
+        private void SetRecordingIndicator(bool status)
+        {
+            if (recordingStatusImage != null)
+            {
+                recordingStatusImage.color = status ? connectedColor : disconnectedColor;
+            }
+
             if(status)
             {
                 // Log started
