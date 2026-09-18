@@ -96,9 +96,23 @@ namespace ExciteOMeter
             {
                 currentlyConnected = false;
                 SetConnectedStatus(currentlyConnected);
+                ResetLiveDataDisplay();
             }
 
-            ExciteOMeterOnlineUI.instance.ShowDisconnectedSignal();
+            if (ExciteOMeterOnlineUI.instance != null)
+                ExciteOMeterOnlineUI.instance.ShowDisconnectedSignal();
+        }
+
+        private void ResetLiveDataDisplay()
+        {
+            if (valueText != null)
+                valueText.text = "-";
+
+            if (onlineLine != null)
+            {
+                onlineLine.RestartPlot();
+                onlineLine.UpdateLineColor(disconnectedColor);
+            }
         }
 
         // Sets the color of the image as connected or disconnected
