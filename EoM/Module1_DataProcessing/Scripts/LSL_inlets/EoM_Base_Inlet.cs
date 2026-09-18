@@ -102,6 +102,9 @@ namespace ExciteOMeter
         protected virtual bool isTheExpected(LSLStreamInfoWrapper stream)
         {
             bool predicate = StreamName.Equals(stream.Name);
+            if (!predicate && VariableType == DataType.HeartRate)
+                predicate = stream.Name.Equals("HR") || stream.Name.Equals("HeartRate");
+
             predicate &= StreamType.Equals(stream.Type);
             // add a more specific description for your stream here specifying hostname etc.
             //predicate &= stream.HostName.Equals("Expected Hostname");
